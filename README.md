@@ -26,7 +26,7 @@ This repository hosts a dynamic, web-based verification portfolio containing:
 ## 🌐 Live Dashboard
 
 The interactive verification dashboard is designed to be hosted via GitHub Pages. 
-To view the live dashboard, visit: [https://11mosfets.github.io/verification_suite/](https://11mosfets.github.io/verification_suite/)
+To view the live dashboard, visit: [https://verification-suite.pages.dev](https://verification-suite.pages.dev)
 
 ---
 *© 2026 Akshat Baranwal. All Rights Reserved.*
