@@ -1,0 +1,44 @@
+<session version="1.1" release="T-2022.06-SP2-1" timestp="2026-05-05 15:51:43 GMT">
+  <info>
+    <attr name="datetime" value="Tue May  5 08:51:56 2026
+"/>
+    <attr name="command" value="urg -dir simv_verichip7.vdb -elfile verichip7.el"/>
+    <attr name="top_instance" value="top_verichip7"/>
+  </info>
+  <hvp>
+    <datadef>
+      <metdef name="Line" type="ratio" aggregator="average" builtin="1" />
+      <metdef name="Cond" type="ratio" aggregator="average" builtin="1" />
+      <metdef name="Toggle" type="ratio" aggregator="average" builtin="1" />
+      <metdef name="FSM" type="ratio" aggregator="average" builtin="1" />
+      <metdef name="Group" type="percent" aggregator="average" builtin="1" />
+    </datadef>
+  </hvp>
+  <old_coverage>
+  <scope type="top" name="top">
+    <metric name="Line" value="159/159" />
+    <metric name="Cond" value="102/102" />
+    <metric name="Toggle" value="398/398" />
+    <metric name="FSM" value="8/8" />
+    <metric name="Group" value="100%" />
+  </scope>
+  <scope type="instance" name="top">
+  </scope>
+  <scope type="group" name="top">
+    <scope type="group" name="top_verichip7.verichip7.verichip7_cov::alu_regs">
+      <metric name="Group" value="100%" />
+    </scope>
+    <scope type="group" name="top_verichip7.verichip7.verichip7_cov::inters">
+      <metric name="Group" value="100%" />
+    </scope>
+    <scope type="group" name="top_verichip7.verichip7.verichip7_cov::colors">
+      <metric name="Group" value="100%" />
+    </scope>
+    <scope type="group" name="top_verichip7.verichip7.verichip7_cov::bus_interface">
+      <metric name="Group" value="100%" />
+    </scope>
+  </scope>
+  <scope type="assert" name="Statistics">
+  </scope>
+  </old_coverage>
+</session>

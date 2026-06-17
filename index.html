@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verichip Verification Dashboard</title>
+    <meta name="description"
+        content="Interactive High-Level Diagram and Verification Coverage Metrics for the Verichip DUT.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="background-grid"></div>
+    <div class="glow-blob blob-1"></div>
+    <div class="glow-blob blob-2"></div>
+
+    <main class="container">
+        <header class="hero">
+            <!-- <div class="badge">VERIFICATION PORTFOLIO</div> -->
+            <h1>SOC <span class="gradient-text">Verification Enviorment</span></h1>
+            <p class="subtitle">Verification Suite created by Akshat Baranwal</p>
+            <div class="hero-buttons">
+                <a href="urgReport/dashboard.html" class="btn primary-btn">View Full URG Report</a>
+                <a href="https://github.com/11mosfets/verification_suite" class="btn secondary-btn"
+                    target="_blank">GitHub Repository</a>
+            </div>
+        </header>
+
+        <section class="section hld-section">
+            <div class="section-header">
+                <h2>Interactive High-Level Diagram of the DUT</h2>
+                <p>Hover over the architectural blocks to explore data paths and interfaces.</p>
+            </div>
+            <div class="hld-container glass-panel">
+                <svg id="hld-svg" viewBox="0 0 1000 600" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                            <feGaussianBlur stdDeviation="5" result="blur" />
+                            <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                        </filter>
+                        <linearGradient id="bus-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stop-color="#38bdf8" />
+                            <stop offset="100%" stop-color="#818cf8" />
+                        </linearGradient>
+                        <marker id="arrow" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6"
+                            orient="auto-start-reverse">
+                            <path d="M 0 0 L 10 5 L 0 10 z" fill="#94a3b8" />
+                        </marker>
+                    </defs>
+
+                    <!-- Background Grid for SVG -->
+                    <pattern id="svg-grid" width="40" height="40" patternUnits="userSpaceOnUse">
+                        <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="1" />
+                    </pattern>
+                    <rect width="100%" height="100%" fill="url(#svg-grid)" />
+
+                    <!-- Connections (Data Paths) -->
+                    <!-- Bus to Regs -->
+                    <path class="data-path bus-path" d="M 250 300 L 400 300" />
+                    <!-- Regs to ALU -->
+                    <path class="data-path alu-path" d="M 600 200 L 700 200" />
+                    <path class="data-path alu-path" d="M 600 232 L 700 232" />
+                    <!-- ALU to Regs (feedback to ALU Output register) -->
+                    <path class="data-path alu-path" d="M 800 250 L 830 250 L 830 372 L 600 372" />
+                    <!-- FSM to Regs -->
+                    <path class="data-path fsm-path ctrl-path" d="M 500 500 L 500 450" />
+                    <!-- FSM to ALU -->
+                    <path class="data-path fsm-path ctrl-path" d="M 600 515 L 750 515 L 750 300" />
+
+                    <!-- External Inputs -->
+                    <g class="block io-block">
+                        <text x="30" y="270" class="svg-text small">chip_select</text>
+                        <text x="30" y="290" class="svg-text small">address[6:0]</text>
+                        <text x="30" y="310" class="svg-text small">data_in[15:0]</text>
+                        <text x="30" y="330" class="svg-text small">rw_, byte_en</text>
+                        <path d="M 120 300 L 150 300" class="data-path bus-path" marker-end="url(#arrow)" />
+                    </g>
+
+                    <g class="block io-block">
+                        <text x="50" y="520" class="svg-text small">gold, maroon</text>
+                        <path d="M 150 520 L 400 520" class="data-path fsm-path ctrl-path" />
+                    </g>
+
+                    <!-- Bus Interface Module -->
+                    <g class="block module bus-if" id="bus-if">
+                        <rect x="150" y="200" width="100" height="200" rx="8" class="svg-rect" />
+                        <text x="200" y="300" class="svg-text title" text-anchor="middle">Bus</text>
+                        <text x="200" y="320" class="svg-text title" text-anchor="middle">Interface</text>
+                    </g>
+
+                    <!-- Register File -->
+                    <g class="block module reg-file" id="reg-file">
+                        <rect x="400" y="100" width="200" height="350" rx="8" class="svg-rect" />
+                        <text x="500" y="130" class="svg-text title" text-anchor="middle">Register File</text>
+
+                        <rect x="420" y="150" width="160" height="25" rx="4" class="svg-subrect" />
+                        <text x="500" y="167" class="svg-text small" text-anchor="middle">Version (0x00)</text>
+
+                        <rect x="420" y="185" width="160" height="25" rx="4" class="svg-subrect" />
+                        <text x="500" y="202" class="svg-text small" text-anchor="middle">Left Input (0x10)</text>
+
+                        <rect x="420" y="220" width="160" height="25" rx="4" class="svg-subrect" />
+                        <text x="500" y="237" class="svg-text small" text-anchor="middle">Right Input (0x14)</text>
+
+                        <rect x="420" y="255" width="160" height="25" rx="4" class="svg-subrect" />
+                        <text x="500" y="272" class="svg-text small" text-anchor="middle">Command (0x08)</text>
+
+                        <rect x="420" y="290" width="160" height="25" rx="4" class="svg-subrect" />
+                        <text x="500" y="307" class="svg-text small" text-anchor="middle">Status (0x04)</text>
+
+                        <rect x="420" y="325" width="160" height="25" rx="4" class="svg-subrect" />
+                        <text x="500" y="342" class="svg-text small" text-anchor="middle">Config (0x0C)</text>
+
+                        <rect x="420" y="360" width="160" height="25" rx="4" class="svg-subrect alu-res" />
+                        <text x="500" y="377" class="svg-text small" text-anchor="middle">ALU Output (0x18)</text>
+                    </g>
+
+                    <!-- ALU -->
+                    <g class="block module alu" id="alu">
+                        <polygon points="700,180 800,220 800,280 700,320 700,260 720,250 700,240"
+                            class="svg-rect alu-shape" />
+                        <text x="760" y="255" class="svg-text title" text-anchor="middle">ALU</text>
+                        <text x="760" y="275" class="svg-text tiny" text-anchor="middle">ADD,SUB,MVL,MVR,</text>
+                        <text x="760" y="290" class="svg-text tiny" text-anchor="middle">SWA,SHL,SHR</text>
+                    </g>
+
+                    <!-- Interrupt Controller -->
+                    <g class="block module int-ctrl" id="int-ctrl">
+                        <rect x="800" y="450" width="120" height="80" rx="8" class="svg-rect" />
+                        <text x="860" y="485" class="svg-text title" text-anchor="middle">Interrupts</text>
+                        <text x="860" y="505" class="svg-text small" text-anchor="middle">int1, int2</text>
+                        <!-- FSM to Interrupts -->
+                        <path d="M 600 545 L 860 545 L 860 530" class="data-path ctrl-path" />
+                    </g>
+
+                    <!-- State Machine -->
+                    <g class="block module fsm" id="fsm">
+                        <rect x="400" y="500" width="200" height="60" rx="30" class="svg-rect fsm-rect" />
+                        <text x="500" y="535" class="svg-text title" text-anchor="middle">State Machine</text>
+                    </g>
+                </svg>
+                <div class="hld-info-panel" id="hld-info">
+                    <h3 id="hld-title">System Architecture</h3>
+                    <p id="hld-desc">Hover over a component to see its details. Verichip features a 16-bit architecture
+                        with a robust State Machine.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section metrics-section">
+            <div class="section-header">
+                <h2>Coverage Metrics</h2>
+                <p>Industry-standard metrics collected via Synopsys VCS URG.</p>
+            </div>
+
+            <div class="metrics-grid">
+                <!-- Line Coverage -->
+                <div class="metric-card glass-panel perfect">
+                    <div class="circular-progress" style="--val: 100;">
+                        <svg viewBox="0 0 100 100">
+                            <circle class="bg" cx="50" cy="50" r="40"></circle>
+                            <circle class="meter" cx="50" cy="50" r="40"></circle>
+                        </svg>
+                        <div class="value">100%</div>
+                    </div>
+                    <h3>Line</h3>
+                    <p>159 / 159</p>
+                </div>
+
+                <!-- Toggle Coverage -->
+                <div class="metric-card glass-panel perfect">
+                    <div class="circular-progress" style="--val: 100;">
+                        <svg viewBox="0 0 100 100">
+                            <circle class="bg" cx="50" cy="50" r="40"></circle>
+                            <circle class="meter" cx="50" cy="50" r="40"></circle>
+                        </svg>
+                        <div class="value">100%</div>
+                    </div>
+                    <h3>Toggle</h3>
+                    <p>398 / 398</p>
+                </div>
+
+                <!-- Condition Coverage -->
+                <div class="metric-card glass-panel excellent">
+                    <div class="circular-progress" style="--val: 95.33; --clr: #f59e0b;">
+                        <svg viewBox="0 0 100 100">
+                            <circle class="bg" cx="50" cy="50" r="40"></circle>
+                            <circle class="meter" cx="50" cy="50" r="40"></circle>
+                        </svg>
+                        <div class="value">95.3%</div>
+                    </div>
+                    <h3>Condition</h3>
+                    <p>102 / 107 (Module)</p>
+                </div>
+
+                <!-- FSM Coverage -->
+                <div class="metric-card glass-panel perfect">
+                    <div class="circular-progress" style="--val: 100;">
+                        <svg viewBox="0 0 100 100">
+                            <circle class="bg" cx="50" cy="50" r="40"></circle>
+                            <circle class="meter" cx="50" cy="50" r="40"></circle>
+                        </svg>
+                        <div class="value">100%</div>
+                    </div>
+                    <h3>FSM</h3>
+                    <p>8 / 8 States/Trans</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section docs-section">
+            <div class="section-header">
+                <h2>Verification Test Plans</h2>
+                <p>Comprehensive strategies detailing verification intent and methodology.</p>
+            </div>
+            <div class="docs-grid">
+                <div class="doc-card glass-panel">
+                    <div class="doc-icon">📄</div>
+                    <div class="doc-info">
+                        <h3>Register Test Plan</h3>
+                        <p>PDF Document</p>
+                    </div>
+                    <a href="test plans/Register_testplan.pdf" target="_blank" class="btn primary-btn doc-btn">View
+                        PDF</a>
+                </div>
+                <div class="doc-card glass-panel">
+                    <div class="doc-icon">📄</div>
+                    <div class="doc-info">
+                        <h3>ALU Test Plan</h3>
+                        <p>PDF Document</p>
+                    </div>
+                    <a href="test plans/alu_test_plan.pdf" target="_blank" class="btn primary-btn doc-btn">View PDF</a>
+                </div>
+                <div class="doc-card glass-panel">
+                    <div class="doc-icon">📄</div>
+                    <div class="doc-info">
+                        <h3>State Machine Test Plan</h3>
+                        <p>PDF Document</p>
+                    </div>
+                    <a href="test plans/state_machine_plan.pdf" target="_blank" class="btn primary-btn doc-btn">View
+                        PDF</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="two-col-layout">
+                <!-- FSM Animation Section -->
+                <div class="fsm-animation-box glass-panel">
+                    <div class="section-header small">
+                        <h2>State Machine</h2>
+                    </div>
+                    <div class="fsm-graph" id="fsm-graph">
+                        <!-- Rendered via CSS/JS -->
+                        <div class="fsm-node" id="state-reset" style="top: 20%; left: 50%;">RESET</div>
+                        <div class="fsm-node" id="state-norm" style="top: 50%; left: 50%;">NORMAL</div>
+                        <div class="fsm-node" id="state-err" style="top: 80%; left: 30%;">ERROR</div>
+                        <div class="fsm-node" id="state-exp" style="top: 80%; left: 70%;">EXP_VIO</div>
+                        <div class="fsm-node" id="state-lost" style="top: 20%; left: 10%;">LOST</div>
+
+                        <!-- Simplified transition lines with SVG -->
+                        <svg class="fsm-edges" width="100%" height="100%">
+                            <line x1="50%" y1="30%" x2="50%" y2="40%" class="edge active" />
+                            <line x1="45%" y1="60%" x2="35%" y2="70%" class="edge" />
+                            <line x1="55%" y1="60%" x2="65%" y2="70%" class="edge" />
+                            <line x1="30%" y1="70%" x2="45%" y2="30%" class="edge" /> <!-- Err to Reset -->
+                        </svg>
+                        <div class="fsm-token" id="fsm-token"></div>
+                    </div>
+                </div>
+
+                <!-- Coverage Groups Breakdown -->
+                <div class="groups-breakdown">
+                    <div class="section-header small">
+                        <h2>Coverage Groups</h2>
+                    </div>
+                    <div class="group-list">
+                        <div class="group-item glass-panel">
+                            <div class="group-icon">🧮</div>
+                            <div class="group-details">
+                                <h4>alu_regs</h4>
+                                <p>25 Variables, 52 Crosses. Validates all ALU commands across Left/Right register
+                                    inputs.</p>
+                            </div>
+                            <div class="group-score">100%</div>
+                        </div>
+                        <div class="group-item glass-panel">
+                            <div class="group-icon">⚡</div>
+                            <div class="group-details">
+                                <h4>inters</h4>
+                                <p>4 Variables, 4 Crosses. Validates interrupt generation conditions (int1, int2).</p>
+                            </div>
+                            <div class="group-score">100%</div>
+                        </div>
+                        <div class="group-item glass-panel">
+                            <div class="group-icon">🎨</div>
+                            <div class="group-details">
+                                <h4>colors</h4>
+                                <p>4 Variables, 4 Crosses. State machine progression inputs (gold, maroon).</p>
+                            </div>
+                            <div class="group-score">100%</div>
+                        </div>
+                        <div class="group-item glass-panel">
+                            <div class="group-icon">🔌</div>
+                            <div class="group-details">
+                                <h4>bus_interface</h4>
+                                <p>23 Variables, 30 Crosses. Memory mapped I/O access across all 7 registers.</p>
+                            </div>
+                            <div class="group-score">100%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <div class="footer-icons">
+                <a href="https://www.linkedin.com/in/akshatbaranwal21/" target="_blank" class="icon-link"
+                    aria-label="LinkedIn">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                        <path
+                            d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+                    </svg>
+                </a>
+                <a href="https://github.com/11mosfets" target="_blank" class="icon-link" aria-label="GitHub">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                        <path
+                            d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+                    </svg>
+                </a>
+                <a href="https://www.akshatbaranwal.me/" target="_blank" class="icon-link" aria-label="Portfolio">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="16 18 22 12 16 6"></polyline>
+                        <polyline points="8 6 2 12 8 18"></polyline>
+                        <line x1="14" y1="4" x2="10" y2="20"></line>
+                    </svg>
+                </a>
+                <a href="mailto:akshatbrnwl21@gmail.com" class="icon-link" aria-label="Email">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                        <path
+                            d="M0 3v18h24v-18h-24zm6.623 7.929l-4.623 5.712v-9.458l4.623 3.746zm-4.141-5.929h19.035l-9.517 7.713-9.518-7.713zm5.694 7.188l3.824 3.099 3.83-3.104 5.612 6.817h-18.866l5.6-6.812zm9.201-1.476l4.623-3.747v9.458l-4.623-5.711z" />
+                    </svg>
+                </a>
+            </div>
+
+            <hr class="footer-divider">
+
+            <div class="footer-copyright">
+                <p>&copy; 2026 Akshat Baranwal. All Rights Reserved.</p>
+            </div>
+
+            <a href="#" class="scroll-top" aria-label="Scroll to top"
+                onclick="window.scrollTo({top:0, behavior:'smooth'}); return false;">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                    <path d="M12 4l-8 8h6v8h4v-8h6z" />
+                </svg>
+            </a>
+        </footer>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
